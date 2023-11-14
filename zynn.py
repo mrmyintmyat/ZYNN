@@ -1,3 +1,5 @@
+import subprocess
+
 # Run pip freeze and save to requirements.txt
 subprocess.run(['pip', 'freeze'], stdout=open('requirements.txt', 'w'))
 
@@ -17,7 +19,6 @@ from urllib.parse import unquote
 import webbrowser
 from http.server import SimpleHTTPRequestHandler, HTTPStatus
 import socketserver
-import subprocess
 from pyngrok import ngrok
 from pyfiglet import Figlet
 from termcolor import colored
