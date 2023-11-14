@@ -1,10 +1,6 @@
 import subprocess
 
-# Run pip freeze and save to requirements.txt
-# subprocess.run(['pip', 'freeze'], stdout=open('requirements.txt', 'w'))
-
-# Install dependencies from requirements.txt
-# subprocess.check_call([ 'pip', 'install', '-r', 'requirements.txt'])
+subprocess.check_call(['pip', 'install', '-r', 'requirements.txt'])
 
 import os
 import shutil
@@ -54,14 +50,14 @@ def print_colored_text_with_animation(text, color='red', delay=0.03):
 def print_colored_zynn():
     clear_terminal()
     zynn = f"""
- {colored("-̷-̷-̷-̷-̷-̷-̷-̷-̷-̷-̷-̷-̷-̷-̷-̷-̷-̷-̷", color=red)}
+ {colored("-------------------------------------", color=red)}
  {colored(" ███████╗██╗░░░██╗███╗░░██╗███╗░░██╗", color=red)}
  {colored(" ╚════██║╚██╗░██╔╝████╗░██║████╗░██║", color=red)}
  {colored(" ░░███╔═╝░╚████╔", color=red)}{colored(" V-0 ", color=green)}{colored("██╗██║██╔██╗██║", color=red)}
  {colored(" ██╔══╝░░░░╚██╔╝░░██║╚████║██║╚████║", color=red)}
  {colored(" ███████╗░░░██║░░░██║░╚███║██║░╚███║", color=red)}
  {colored(" ╚══════╝░░░╚═╝░░░╚═╝░░╚══╝╚═╝░░╚══╝", color=red)}
- {colored("-̷-̷-̷-̷-̷-̷-̷-̷-̷-̷-̷-̷-̷-̷-̷-̷-̷-̷-̷", color=red)}
+ {colored("-------------------------------------", color=red)}
     """
     print(zynn)
 
