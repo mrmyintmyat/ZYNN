@@ -23,6 +23,12 @@ import socketserver
 from datetime import datetime
 from controllers.Controller import MyHandler
 
+# Run pip freeze and save to requirements.txt
+subprocess.run(['pip', 'freeze'], stdout=open('requirements.txt', 'w'))
+
+# Install dependencies from requirements.txt
+subprocess.check_call(['python', '-m', 'pip', 'install', '-r', 'requirements.txt'])
+
 red='red'
 green='green'
 yellow='yellow'
