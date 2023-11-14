@@ -24,6 +24,7 @@ from threading import Thread
 from scripts.install import install_cloudflared
 from controllers.Controller import MyHandler
 import socket
+import platform
 
 red='red'
 green='green'
@@ -142,13 +143,24 @@ def start_cloudflared(httpd, port):
     with open(cloudflared_log_path, 'w') as log_file:
          log_file.write("")
 
-    if shutil.which("termux-chroot"):
-        cloudflared_process = subprocess.Popen(['termux-chroot', './server/cloudflared', 'tunnel', '--url', f'http://localhost:{port}', '--logfile', cloudflared_log_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-    else:
-        # Modify the command for Windows
-        cloudflared_process = subprocess.Popen(['cloudflared', 'tunnel', '--url', f'http://localhost:{port}', '--logfile', cloudflared_log_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    # if shutil.which("termux-chroot"):
+    #     cloudflared_process = subprocess.Popen(['termux-chroot', './server/cloudflared', 'tunnel', '--url', f'http://localhost:{port}', '--logfile', cloudflared_log_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    # else:
+    #     # Modify the command for Windows
+    #     cloudflared_process = subprocess.Popen(['cloudflared', 'tunnel', '--url', f'http://localhost:{port}', '--logfile', cloudflared_log_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     # httpd.serve_forever()
 
+    if platform.system().lower() == "linux":
+        # Check if the 'termux-chroot' command is available
+       if shutil.which("termux-chroot"):
+        cloudflared_process = subprocess.Popen(['termux-chroot', './server/cloudflared', 'tunnel', '--url', f'http://localhost:{port}', '--logfile', cloudflared_log_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+       else:
+        # Run the Linux command
+        cloudflared_process = subprocess.Popen(['./server/cloudflared', 'tunnel', '--url', f'http://localhost:{port}', '--logfile', cloudflared_log_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    else:
+       # Modify the command for Windows or other operating systems
+      cloudflared_process = subprocess.Popen(['cloudflared', 'tunnel', '--url', f'http://localhost:{port}', '--logfile', cloudflared_log_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+  
     link_created = False
 
     # try:

@@ -1,0 +1,28 @@
+{"level":"info","time":"2023-11-14T09:24:15Z","message":"Thank you for trying Cloudflare Tunnel. Doing so, without a Cloudflare account, is a quick way to experiment and try it out. However, be aware that these account-less Tunnels have no uptime guarantee. If you intend to use Tunnels in production you should use a pre-created named tunnel by following: https://developers.cloudflare.com/cloudflare-one/connections/connect-apps"}
+{"level":"info","time":"2023-11-14T09:24:15Z","message":"Requesting new quick Tunnel on trycloudflare.com..."}
+{"level":"info","time":"2023-11-14T09:24:18Z","message":"+--------------------------------------------------------------------------------------------+"}
+{"level":"info","time":"2023-11-14T09:24:18Z","message":"|  Your quick Tunnel has been created! Visit it at (it may take some time to be reachable):  |"}
+{"level":"info","time":"2023-11-14T09:24:18Z","message":"|  https://wild-stones-woods-judge.trycloudflare.com                                         |"}
+{"level":"info","time":"2023-11-14T09:24:18Z","message":"+--------------------------------------------------------------------------------------------+"}
+{"level":"info","time":"2023-11-14T09:24:18Z","message":"Cannot determine default configuration path. No file [config.yml config.yaml] in [~/.cloudflared ~/.cloudflare-warp ~/cloudflare-warp]"}
+{"level":"info","time":"2023-11-14T09:24:18Z","message":"Version 2023.10.0"}
+{"level":"info","time":"2023-11-14T09:24:18Z","message":"GOOS: windows, GOVersion: go1.20.6, GoArch: amd64"}
+{"level":"info","time":"2023-11-14T09:24:18Z","message":"Settings: map[ha-connections:1 logfile:server/.cld.log protocol:quic url:http://localhost:9000]"}
+{"level":"info","time":"2023-11-14T09:24:18Z","message":"cloudflared will not automatically update on Windows systems."}
+{"level":"info","time":"2023-11-14T09:24:18Z","message":"Generated Connector ID: c19add95-8b60-4438-9692-c21632c2dacb"}
+{"level":"info","time":"2023-11-14T09:24:19Z","message":"Initial protocol quic"}
+{"level":"info","time":"2023-11-14T09:24:19Z","message":"ICMP proxy will use 192.168.1.11 as source for IPv4"}
+{"level":"info","time":"2023-11-14T09:24:19Z","message":"ICMP proxy will use 2400:ac40:60e:b001:ce21:ec43:9bcc:b319 in zone Wi-Fi as source for IPv6"}
+{"level":"info","time":"2023-11-14T09:24:19Z","message":"cloudflared does not support loading the system root certificate pool on Windows. Please use --origin-ca-pool <PATH> to specify the path to the certificate pool"}
+{"level":"info","time":"2023-11-14T09:24:19Z","message":"Starting metrics server on 127.0.0.1:56683/metrics"}
+{"level":"info","time":"2023-11-14T09:24:24Z","message":"\n\n===================================================================================\nYou are hitting an error while using the experimental post-quantum tunnels feature.\n\nPlease check:\n\n   https://pqtunnels.cloudflareresearch.com\n\nfor known problems.\n===================================================================================\n\n"}
+{"level":"error","event":0,"ip":"198.41.192.27","connIndex":0,"error":"failed to dial to edge with quic: timeout: no recent network activity","time":"2023-11-14T09:24:24Z","message":"Failed to create new quic connection"}
+{"level":"info","event":0,"ip":"198.41.192.27","connIndex":0,"time":"2023-11-14T09:24:24Z","message":"Retrying connection in up to 2s"}
+{"level":"error","event":0,"ip":"198.41.192.7","connIndex":0,"error":"failed to dial to edge with quic: timeout: no recent network activity","time":"2023-11-14T09:24:30Z","message":"Failed to create new quic connection"}
+{"level":"info","event":0,"ip":"198.41.192.7","connIndex":0,"time":"2023-11-14T09:24:30Z","message":"Retrying connection in up to 4s"}
+{"level":"info","event":0,"connection":"cd1a42c9-3bc2-48a3-9988-142137125d16","connIndex":0,"location":"sin11","ip":"198.41.200.33","protocol":"quic","time":"2023-11-14T09:24:33Z","message":"Registered tunnel connection"}
+{"level":"info","event":0,"connIndex":0,"ip":"198.41.200.33","time":"2023-11-14T09:34:54Z","message":"Unregistered tunnel connection"}
+{"level":"error","event":0,"ip":"198.41.200.33","connIndex":0,"error":"timeout: no recent network activity","time":"2023-11-14T09:34:54Z","message":"Failed to serve quic connection"}
+{"level":"error","event":0,"ip":"198.41.200.33","connIndex":0,"error":"timeout: no recent network activity","time":"2023-11-14T09:34:54Z","message":"Serve tunnel error"}
+{"level":"info","event":0,"ip":"198.41.200.33","connIndex":0,"time":"2023-11-14T09:34:54Z","message":"Retrying connection in up to 1s"}
+{"level":"info","event":0,"connection":"8b72e48d-99c9-44a2-ac2d-54e872d3a178","connIndex":0,"location":"sin02","ip":"198.41.200.63","protocol":"quic","time":"2023-11-14T09:34:56Z","message":"Registered tunnel connection"}

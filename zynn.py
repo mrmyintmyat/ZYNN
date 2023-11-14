@@ -4,7 +4,7 @@ import subprocess
 # subprocess.run(['pip', 'freeze'], stdout=open('requirements.txt', 'w'))
 
 # Install dependencies from requirements.txt
-subprocess.check_call(['sudo', 'pip3', 'install', '-r', 'requirements.txt'])
+# subprocess.check_call([ 'pip', 'install', '-r', 'requirements.txt'])
 
 import os
 import shutil
