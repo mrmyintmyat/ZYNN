@@ -71,6 +71,7 @@ def small_title_fb():
 
 
 def main():
+  print_colored_zynn()
   try:
     menu_text = """
   1 -> Login page
@@ -113,14 +114,12 @@ def encryption_and_decryption():
         decrypt_file()
     elif user_choice == '3':
         clear_terminal()
-        print_colored_zynn()
         main()
     else:
        user_choice = input('    \033[32mPlease select [1,2,3]:\033[0m ')
 
 
 if __name__ == "__main__":
-    print_colored_zynn()
     main()
     
 # except KeyboardInterrupt:

